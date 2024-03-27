@@ -10,7 +10,7 @@ const resolvers = {
                 return userData
             }
 
-            throw AuthenticationError
+            throw new AuthenticationError;
         }
 
     },
@@ -46,7 +46,7 @@ const resolvers = {
                 );
                 return updatedUser;
             }
-            throw AuthenticationError;
+            throw new AuthenticationError;
 
         },
 
@@ -60,7 +60,7 @@ const resolvers = {
                 return updatedUser;
 
             }
-            throw AuthenticationError;
+            throw new AuthenticationError;
         }
     }
 };
