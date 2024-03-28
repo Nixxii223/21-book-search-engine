@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   Container,
   Card,
@@ -7,7 +9,8 @@ import {
   Col
 } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
+import { QUERY_GET_ME } from '../utils/queries';
+import { REMOVE_BOOK } from '../utils/mutations';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
@@ -26,14 +29,14 @@ const SavedBooks = () => {
           return false;
         }
 
-        const response = await getMe(token);
+        const response = useQuery(QUERY_GET_ME);
 
         if (!response.ok) {
           throw new Error('something went wrong!');
         }
 
-        const user = await response.json();
-        setUserData(user);
+        const userData = await response.json();
+        setUserData(userData);
       } catch (err) {
         console.error(err);
       }
@@ -51,7 +54,7 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      const response = useMutation(REMOVE_BOOK);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
