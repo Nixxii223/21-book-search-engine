@@ -10,7 +10,7 @@ import {
 
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
-import { SAVE_BOOK, searchGoogleBooks } from '../utils/mutations';
+import { SAVE_BOOK } from '../utils/mutations';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {

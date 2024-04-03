@@ -10,7 +10,7 @@ const resolvers = {
                 return userData
             }
 
-            throw new AuthenticationError;
+            throw AuthenticationError;
         }
 
     },
@@ -24,14 +24,16 @@ const resolvers = {
 
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ email })
+            console.log(user)
 
             if (!user) {
-                throw new AuthenticationError;
+                throw AuthenticationError;
             }
 
             const correctPw = await user.isCorrectPassword(password);
+            console.log(correctPw)
             if (!correctPw) {
-                throw new AuthenticationError;
+                throw AuthenticationError;
             }
 
             const token = signToken(user);
@@ -47,7 +49,7 @@ const resolvers = {
                 );
                 return updatedUser;
             }
-            throw new AuthenticationError;
+            throw AuthenticationError;
 
         },
 
@@ -61,7 +63,7 @@ const resolvers = {
                 return updatedUser;
 
             }
-            throw new AuthenticationError;
+            throw AuthenticationError;
         }
     }
 };
