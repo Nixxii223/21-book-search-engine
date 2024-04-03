@@ -41,7 +41,6 @@ function App() {
         <div className="container">
           <Outlet />
         </div>
-        <AppNavbar />
       </div>
     </ApolloProvider>
   );
