@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { useMutation } from '@apollo/client';
 import {
@@ -14,36 +14,20 @@ import { REMOVE_BOOK } from '../utils/mutations';
 import AuthService from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
+
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
-
+  const [removeBook] = useMutation(REMOVE_BOOK);
+  const { loading, data } = useQuery(QUERY_GET_ME);
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
 
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = AuthService.loggedIn() ? AuthService.getToken() : null;
-
-        if (!token) {
-          return false;
-        }
-
-        const response = useQuery(QUERY_GET_ME);
-
-        if (!response.ok) {
-          throw new Error('something went wrong!');
-        }
-
-        const userData = await response.json();
-        setUserData(userData);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getUserData();
-  }, [userDataLength]);
+    if (!loading) {
+      setUserData(data.me);
+      console.log(data.me)
+    }
+  }, [loading, data]);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -54,14 +38,9 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = useMutation(REMOVE_BOOK);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
+      const { data } = await removeBook({
+        variables: { bookId },
+      });
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -76,8 +55,8 @@ const SavedBooks = () => {
 
   return (
     <>
-      <div fluid className="text-light bg-dark p-5">
-        <Container>
+      <div >
+        <Container fluid className="text-light bg-dark p-5">
           <h1>Viewing saved books!</h1>
         </Container>
       </div>

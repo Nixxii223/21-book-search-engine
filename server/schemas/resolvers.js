@@ -42,11 +42,13 @@ const resolvers = {
 
         saveBook: async (parent, { bookData }, context) => {
             if (context.user) {
+                console.log(bookData)
                 const updatedUser = await User.findByIdAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: { savedBooks: bookData } },
                     { new: true }
                 );
+                console.log(updatedUser)
                 return updatedUser;
             }
             throw AuthenticationError;
